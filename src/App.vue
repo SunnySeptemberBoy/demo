@@ -1,0 +1,9 @@
+<template>
+  <input
+    id="upload"
+    type="file"
+    accept="image/*"
+    capture="camera"
+    class="abc"
+  />
+</template>
