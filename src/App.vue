@@ -1,20 +1,20 @@
 <script setup>
 import { ref } from 'vue'
 
+const src = ref('')
 const fileInput = ref(null)
-const url = ref('')
 // const show = ref(false)
-// const fileName = ref('')
+const fileName = ref('')
 // const actions = [
 //   { name: '相册', key: 'picture' },
 //   { name: '相机', key: 'graph' }
 // ]
 
-const handleFileInputChange = (e) => {
+const handleFileInputChange = async (e) => {
   fileName.value = e.target.files[0].name
-  const url = URL.createObjectURL(this.files[0])
-  url.value = url
-  console.log('🚀 ~ handleFileInputChange ~ url:', url)
+  // const url = URL.createObjectURL(e.target.files[0])
+  const img = await readImg(e.target.files[0])
+  src.value = img
 }
 
 // const onSelect = (item) => {
@@ -33,9 +33,32 @@ const handleFileInputChange = (e) => {
 const handleFileUpload = () => {
   fileInput.value.click()
 }
+
+function readImg(file) {
+  return new Promise((resolve, reject) => {
+    const img = new Image()
+    const reader = new FileReader()
+    reader.readAsDataURL(file)
+
+    reader.onload = function (e) {
+      resolve(e.target.result)
+      // img.src = e.target.result
+    }
+    reader.onerror = function (e) {
+      reject(e)
+    }
+    // img.onload = function () {
+    //   resolve(img)
+    // }
+    // img.onerror = function (e) {
+    //   reject(e)
+    // }
+  })
+}
 </script>
 
 <template>
+  <img :src="src" alt="" />
   <input
     v-show="false"
     ref="fileInput"
