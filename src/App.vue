@@ -1,6 +1,8 @@
 <script setup>
 import { ref } from 'vue'
 
+const test = ref('')
+
 const fileInput = ref(null)
 const show = ref(false)
 const fileName = ref('')
@@ -11,6 +13,8 @@ const actions = [
 
 const handleFileInputChange = (e) => {
   fileName.value = e.target.files[0].name
+  const url = URL.createObjectURL(this.files[0])
+  console.log('🚀 ~ handleFileInputChange ~ url:', url)
 }
 
 const onSelect = (item) => {
