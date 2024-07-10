@@ -1,56 +1,40 @@
-<template>
-  <div class="container">
-    <input
-      v-show="false"
-      ref="file"
-      type="file"
-      accept="image/*"
-      onchange="handleFileSelect(event)"
-    />
-    <button @click="handleTakePhoto">选择照片</button>
-
-    <button @click="handleGraphPhoto">拍照</button>
-
-    <button @click="test">test</button>
-  </div>
-</template>
-
 <script setup>
 import { ref } from 'vue'
-const file = ref(null)
 
-const handleTakePhoto = () => {
-  file.value.click()
+const fileInput = ref(null)
+const show = ref(false)
+const actions = [
+  { name: '相册', key: 'picture' },
+  { name: '相机', key: 'graph' }
+]
+
+const onSelect = (item) => {
+  // 默认情况下点击选项时不会自动收起
+  // 可以通过 close-on-click-action 属性开启自动收起
+  show.value = false
+  console.log(item)
+  const { key } = item
+  if (key === 'picture') {
+    fileInput.value.type = 'file'
+  } else {
+    fileInput.value.type = 'text'
+  }
+  fileInput.value.click()
 }
 
-const handleGraphPhoto = () => {
-  window.navigator.mediaDevices
-    .getUserMedia({ video: true })
-    .then(function (stream) {
-      // 将视频流添加到页面上的 video 标签中
-      var video = document.getElementById('my-video')
-      video.srcObject = stream
-      video.play()
-    })
-    .catch(function (error) {
-      console.error('无法访问摄像头:', error)
-    })
-}
-
-const test = () => {
-  window.openTocamera()
+const handleFileSelect = (e) => {
+  console.log(e.target)
 }
 </script>
 
-<style>
-.container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 100vh;
-  button {
-    margin: 10px 0;
-  }
-}
-</style>
+<template>
+  <input
+    v-show="false"
+    ref="fileInput"
+    type="text"
+    accept="image/*"
+    onchange="handleFileSelect(event)"
+  />
+  <van-cell is-link title="基础用法" @click="show = true" />
+  <van-action-sheet v-model:show="show" :actions="actions" @select="onSelect" />
+</template>
