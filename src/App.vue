@@ -3,10 +3,15 @@ import { ref } from 'vue'
 
 const fileInput = ref(null)
 const show = ref(false)
+const fileName = ref('')
 const actions = [
   { name: '相册', key: 'picture' },
   { name: '相机', key: 'graph' }
 ]
+
+const handleFileInputChange = (e) => {
+  fileName.value = e.target.files[0].name
+}
 
 const onSelect = (item) => {
   // 默认情况下点击选项时不会自动收起
@@ -21,10 +26,6 @@ const onSelect = (item) => {
   }
   fileInput.value.click()
 }
-
-const handleFileSelect = (e) => {
-  console.log(e.target)
-}
 </script>
 
 <template>
@@ -33,7 +34,7 @@ const handleFileSelect = (e) => {
     ref="fileInput"
     type="text"
     accept="image/*"
-    onchange="handleFileSelect(event)"
+    @change="handleFileInputChange"
   />
   <van-cell is-link title="基础用法" @click="show = true" />
   <van-action-sheet v-model:show="show" :actions="actions" @select="onSelect" />
